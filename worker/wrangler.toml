@@ -1,0 +1,15 @@
+# Cloudflare Worker for client photo uploads (see worker/README.md).
+name = "image-engine-upload"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# The client's R2 bucket. Create it first in the Cloudflare dashboard.
+[[r2_buckets]]
+binding = "IMAGE_BUCKET"
+bucket_name = "CLIENT_BUCKET_NAME"
+
+# Non-secret settings. Secrets are never stored in this file:
+#   wrangler secret put UPLOAD_TOKEN
+#   wrangler secret put GITHUB_TOKEN
+[vars]
+GITHUB_REPO = "OWNER/REPO"

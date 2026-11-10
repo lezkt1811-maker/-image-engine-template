@@ -29,6 +29,24 @@ IMAGES_DIR = os.path.join(ROOT, "images")
 OUTPUT_DIR = os.path.join(ROOT, "output")
 OUTPUT_IMAGES_DIR = os.path.join(OUTPUT_DIR, "images")
 
+# Optional: when set (e.g. https://pics.example.com, an R2 public bucket domain),
+# images are linked from there and NOT copied into output/, so git never stores them.
+EXTERNAL_IMAGE_URL = os.environ.get("R2_PUBLIC_URL", "").strip().rstrip("/")
+
+
+def image_src(filename):
+    """Path used in the gallery grid: root-relative locally, absolute when external."""
+    if EXTERNAL_IMAGE_URL:
+        return f"{EXTERNAL_IMAGE_URL}/{quote(filename)}"
+    return f"/images/{quote(filename)}"
+
+
+def image_abs(config, filename):
+    """Absolute image URL for pages, RSS (Pinterest) and structured data."""
+    if EXTERNAL_IMAGE_URL:
+        return f"{EXTERNAL_IMAGE_URL}/{quote(filename)}"
+    return f"{config['base_url']}/images/{quote(filename)}"
+
 EXTENSIONS = {".jpg": "image/jpeg", ".jpeg": "image/jpeg",
               ".png": "image/png", ".webp": "image/webp"}
 REQUIRED_CONFIG = ["site_title", "base_url", "author_name", "site_description"]
@@ -162,7 +180,7 @@ def build_index(items, config):
             '<span>{title}</span></a>'.format(
                 # Root-relative paths: output/ is the web root on Cloudflare Pages.
                 href="/" + quote(item["slug"]) + ".html",
-                src="/images/" + quote(item["file"]),
+                src=image_src(item["file"]),
                 alt=html.escape(item["title"], quote=True),
                 title=html.escape(item["title"]),
             )
@@ -232,7 +250,7 @@ def build_rss(items, config):
     ]
     for item in items:
         page_url = f"{base}/{quote(item['slug'])}.html"
-        image_url = f"{base}/images/{quote(item['file'])}"
+        image_url = image_abs(config, item["file"])
         preview = (
             f'<p><a href="{xml_escape(page_url)}"><img src="{xml_escape(image_url)}" '
             f'alt="{xml_escape(item["title"])}" /></a></p>'
@@ -288,12 +306,12 @@ def main():
 
     items = []
     for src, filename, slug, ext in sources:
-        dest = os.path.join(OUTPUT_IMAGES_DIR, filename)
-        shutil.copy2(src, dest)
+        if not EXTERNAL_IMAGE_URL:          # external images are served from R2, not git
+            shutil.copy2(src, os.path.join(OUTPUT_IMAGES_DIR, filename))
 
         title = title_from_slug(slug)
         date = file_timestamp(src)
-        image_url = f"{base}/images/{quote(filename)}"
+        image_url = image_abs(config, filename)
         page_url = f"{base}/{quote(slug)}.html"
         values = {
             "TITLE": html.escape(title, quote=True),

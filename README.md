@@ -23,6 +23,10 @@ This repository is meant to be used as a **GitHub Template repository**. Each cl
 3. In the repository, go to **Settings → Pages**, set the source to the branch and the folder `/output`, or connect it to Cloudflare Pages with the build output directory set to `output`.
 4. Add pictures to `images/` and commit. The workflow rebuilds `output/` automatically.
 
+## Client uploads from a phone (Option A: Worker + R2)
+
+Clients can upload from `https://<their-site>/upload` without touching GitHub. Pictures are stored in a private R2 bucket, not in git. The Action syncs them into `images/` on the build runner, and `build.py` links them from R2 when `R2_PUBLIC_URL` is set. See `worker/README.md` for the setup steps.
+
 ## Local build
 
 Requires Python 3.9 or newer. No packages are needed.
@@ -53,4 +57,6 @@ images/                source pictures (you add these)
 output/                generated site (committed for deployment)
 .github/workflows/build.yml auto-build workflow
 CLIENT-GUIDE.md        non-technical guide for the client
+worker/                upload Worker (R2 storage + build trigger)
+scripts/sync_r2.sh     copies R2 pictures into images/ on the runner
 ```

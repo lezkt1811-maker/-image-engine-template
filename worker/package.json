@@ -1,0 +1,9 @@
+{
+  "name": "image-engine-upload",
+  "private": true,
+  "type": "module",
+  "description": "Client photo upload Worker: validates, stores in R2, and triggers the site build.",
+  "scripts": {
+    "test": "node --test test/worker.test.mjs"
+  }
+}

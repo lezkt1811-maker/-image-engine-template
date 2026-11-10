@@ -4,10 +4,15 @@ on:
   push:
     branches: [main]
     paths:
-      - "images/**"
       - "config.json"
       - "build.py"
       - "templates/**"
+      - "scripts/**"
+      - ".github/workflows/build.yml"
+  repository_dispatch:
+    types: [image-uploaded]     # sent by the upload Worker after each R2 upload
+  schedule:
+    - cron: "17 */6 * * *"      # catches uploads whose dispatch failed
   workflow_dispatch:
 
 permissions:
@@ -29,7 +34,18 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Sync new pictures from R2
+        env:
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: bash scripts/sync_r2.sh
+
       - name: Build site
+        env:
+          R2_PUBLIC_URL: ${{ vars.R2_PUBLIC_URL }}
         run: python build.py
 
       - name: Commit generated output
