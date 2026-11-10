@@ -2,18 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
   <title>Client Visual Archive</title>
-  <link>https://gallery.clientdomain.com/</link>
+  <link>https://art.starchart13.com/</link>
   <description>Automated product and gallery visual showcase.</description>
   <language>en</language>
-  <lastBuildDate>Tue, 10 Nov 2026 17:19:43 +0000</lastBuildDate>
-  <atom:link href="https://gallery.clientdomain.com/rss.xml" rel="self" type="application/rss+xml"/>
-  <item>
-    <title>Phone Test 1</title>
-    <link>https://gallery.clientdomain.com/phone-test-1.html</link>
-    <guid isPermaLink="true">https://gallery.clientdomain.com/phone-test-1.html</guid>
-    <pubDate>Tue, 10 Nov 2026 17:19:42 +0000</pubDate>
-    <description><![CDATA[<p><a href="https://gallery.clientdomain.com/phone-test-1.html"><img src="https://gallery.clientdomain.com/images/phone-test-1.png" alt="Phone Test 1" /></a></p><p>Automated product and gallery visual showcase.</p>]]></description>
-    <enclosure url="https://gallery.clientdomain.com/images/phone-test-1.png" length="463" type="image/png" />
-  </item>
+  <lastBuildDate>Tue, 10 Nov 2026 17:21:21 +0000</lastBuildDate>
+  <atom:link href="https://art.starchart13.com/rss.xml" rel="self" type="application/rss+xml"/>
 </channel>
 </rss>
