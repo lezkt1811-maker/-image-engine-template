@@ -15,6 +15,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 import unicodedata
 import xml.etree.ElementTree as ET
@@ -129,6 +130,17 @@ def clean_output():
 
 
 def file_timestamp(path):
+    """When the picture was added. Git's add date for committed files; otherwise the
+    file's modification time (sync_r2.sh sets this to the R2 upload time in CI)."""
+    try:
+        out = subprocess.run(
+            ["git", "log", "--diff-filter=A", "--format=%cI", "--", path],
+            cwd=ROOT, capture_output=True, text=True, check=True,
+        ).stdout.strip().splitlines()
+        if out:
+            return datetime.fromisoformat(out[-1]).astimezone(timezone.utc)
+    except (OSError, subprocess.CalledProcessError, ValueError):
+        pass
     return datetime.fromtimestamp(os.path.getmtime(path), tz=timezone.utc)
 
 

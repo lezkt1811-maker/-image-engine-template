@@ -16,10 +16,5 @@ Thumbs.db
 *.swp
 *~
 
-# Client pictures live in R2 and are synced to images/ only on the build runner.
-# Never commit them to git.
-images/*
-!images/.gitkeep
-
 # Note: output/ is intentionally NOT ignored. The build workflow commits it
 # so Cloudflare Pages can deploy the generated site.

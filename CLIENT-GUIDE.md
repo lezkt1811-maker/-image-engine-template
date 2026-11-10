@@ -39,11 +39,14 @@ Your website publishes an RSS feed at `https://gallery.yourdomain.com/rss.xml`. 
 - Pinterest can publish up to about **200 pins a day** from the feed.
 
 ### Connect the feed to Pinterest (one time)
-1. Log in to Pinterest with a **business account**. If you have a personal account, convert it in Settings.
-2. Claim your website domain in Pinterest settings.
-3. Go to **Create → Create Pin → Import → RSS** (or the feed setting in your account).
+Pinterest changes its menus from time to time, so the names below may differ slightly. Use Pinterest's help center if you get stuck.
+1. Log in to Pinterest with a **business account**. If you have a personal account, convert it in your account settings.
+2. Claim your website domain in Pinterest's website settings (Pinterest gives you a short code to add to the site, or a file to upload).
+3. Set up automatic pin creation from an RSS feed in Pinterest's publishing tools.
 4. Paste `https://gallery.yourdomain.com/rss.xml` and choose a board.
 5. Test it first on a **secret board** before using a public one.
+
+Pictures appear as pins after Pinterest reads the feed, which happens about once a day.
 
 ## 5. Quick checklist
 
