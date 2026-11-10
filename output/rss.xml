@@ -2,10 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
   <title>Client Visual Archive</title>
-  <link>https://art.starchart13.com/</link>
+  <link>https://gallery.clientdomain.com/</link>
   <description>Automated product and gallery visual showcase.</description>
   <language>en</language>
-  <lastBuildDate>Tue, 10 Nov 2026 17:21:21 +0000</lastBuildDate>
-  <atom:link href="https://art.starchart13.com/rss.xml" rel="self" type="application/rss+xml"/>
+  <lastBuildDate>Tue, 10 Nov 2026 17:21:47 +0000</lastBuildDate>
+  <atom:link href="https://gallery.clientdomain.com/rss.xml" rel="self" type="application/rss+xml"/>
 </channel>
 </rss>
