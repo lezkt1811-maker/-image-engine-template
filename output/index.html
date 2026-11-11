@@ -5,29 +5,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Client Visual Archive</title>
 <meta name="description" content="Automated product and gallery visual showcase.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="canonical" href="https://gallery.clientdomain.com/">
 <meta property="og:title" content="Client Visual Archive">
 <meta property="og:description" content="Automated product and gallery visual showcase.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://gallery.clientdomain.com/">
 <style>
-  body { margin: 0; font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-         background: #f7f5f2; color: #1d1d1f; }
-  header { text-align: center; padding: 1.5rem 1rem 0.5rem; }
-  header h1 { margin: 0; font-size: clamp(1.4rem, 4vw, 2rem); }
-  header p { margin: 0.25rem 0 0; color: #6e6e73; }
-  .grid { display: grid; gap: 14px; padding: 1rem; max-width: 1200px; margin: 0 auto;
+  :root { --cyan:#22D3EE; --blue:#2563FF; --violet:#A855F7; --magenta:#FF2ED1; --bg:#000000;
+          --fg:#E9EFFF; --muted:#9DB0DE; --card:#0A0A0A; --line:rgba(34,211,238,.38); }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; color:var(--fg); font:17px/1.6 Inter,"Segoe UI",system-ui,-apple-system,sans-serif;
+         background: #000; }
+  header { text-align:center; padding:1.6rem 1rem .6rem; }
+  header h1 { margin:0; font:700 clamp(1.4rem,4vw,2rem)/1.2 Orbitron,"Eurostile","Segoe UI",system-ui,sans-serif;
+              letter-spacing:.08em; text-transform:uppercase; color:#fff;
+              background:linear-gradient(90deg,#22D3EE,#2563FF 35%,#A855F7 70%,#FF2ED1);
+              -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+              filter:drop-shadow(0 0 12px rgba(37,99,255,.6)); }
+  header p { margin:.4rem 0 0; color:var(--muted); }
+  .grid { display:grid; gap:1.1rem; padding:1rem; max-width:1200px; margin:0 auto;
           grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-  .card { display: block; background: #fff; border-radius: 12px; overflow: hidden;
-          text-decoration: none; color: inherit; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
-  .card img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
-  .card span { display: block; padding: 0.6rem 0.8rem; font-size: 0.95rem; }
-  footer { text-align: center; color: #6e6e73; font-size: 0.85rem; padding: 2rem 1rem; }
-  @media (prefers-color-scheme: dark) {
-    body { background: #111113; color: #f5f5f7; }
-    .card { background: #1c1c1f; }
-    header p, footer { color: #9a9aa2; }
-  }
+  .card { display:block; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+          text-decoration:none; color:var(--fg); transition: box-shadow .2s, border-color .2s, transform .2s; }
+  .card:hover { border-color:var(--magenta); transform:translateY(-2px);
+                box-shadow:0 0 26px rgba(37,99,255,.6), 0 0 40px rgba(255,46,209,.25); }
+  .card img { display:block; width:100%; aspect-ratio: 1 / 1; object-fit: cover; }
+  .card span { display:block; padding:.7rem .9rem; font-size:.9rem; font-weight:600; }
+  footer { text-align:center; color:var(--muted); font-size:.85rem; padding:2rem 1rem; }
+  a { color:var(--cyan); }
 </style>
 </head>
 <body>
