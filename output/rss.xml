@@ -5,7 +5,39 @@
   <link>https://gallery.clientdomain.com/</link>
   <description>Automated product and gallery visual showcase.</description>
   <language>en</language>
-  <lastBuildDate>Tue, 10 Nov 2026 17:21:47 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 11 Nov 2026 15:52:40 +0000</lastBuildDate>
   <atom:link href="https://gallery.clientdomain.com/rss.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>Sample Ceramic Vase 1</title>
+    <link>https://gallery.clientdomain.com/sample-ceramic-vase-1.html</link>
+    <guid isPermaLink="true">https://gallery.clientdomain.com/sample-ceramic-vase-1.html</guid>
+    <pubDate>Wed, 11 Nov 2026 15:52:25 +0000</pubDate>
+    <description><![CDATA[<p><a href="https://gallery.clientdomain.com/sample-ceramic-vase-1.html"><img src="https://gallery.clientdomain.com/images/sample-ceramic-vase-1.jpg" alt="Sample Ceramic Vase 1" /></a></p><p>Automated product and gallery visual showcase.</p>]]></description>
+    <enclosure url="https://gallery.clientdomain.com/images/sample-ceramic-vase-1.jpg" length="375194" type="image/jpeg" />
+  </item>
+  <item>
+    <title>Sample Lamp</title>
+    <link>https://gallery.clientdomain.com/sample-lamp.html</link>
+    <guid isPermaLink="true">https://gallery.clientdomain.com/sample-lamp.html</guid>
+    <pubDate>Wed, 11 Nov 2026 15:52:25 +0000</pubDate>
+    <description><![CDATA[<p><a href="https://gallery.clientdomain.com/sample-lamp.html"><img src="https://gallery.clientdomain.com/images/sample-lamp.webp" alt="Sample Lamp" /></a></p><p>Automated product and gallery visual showcase.</p>]]></description>
+    <enclosure url="https://gallery.clientdomain.com/images/sample-lamp.webp" length="173362" type="image/webp" />
+  </item>
+  <item>
+    <title>Sample Moon Serpent</title>
+    <link>https://gallery.clientdomain.com/sample-moon-serpent.html</link>
+    <guid isPermaLink="true">https://gallery.clientdomain.com/sample-moon-serpent.html</guid>
+    <pubDate>Wed, 11 Nov 2026 15:52:25 +0000</pubDate>
+    <description><![CDATA[<p><a href="https://gallery.clientdomain.com/sample-moon-serpent.html"><img src="https://gallery.clientdomain.com/images/sample-moon-serpent.png" alt="Sample Moon Serpent" /></a></p><p>Automated product and gallery visual showcase.</p>]]></description>
+    <enclosure url="https://gallery.clientdomain.com/images/sample-moon-serpent.png" length="208303" type="image/png" />
+  </item>
+  <item>
+    <title>Sample Landscape</title>
+    <link>https://gallery.clientdomain.com/sample-landscape.html</link>
+    <guid isPermaLink="true">https://gallery.clientdomain.com/sample-landscape.html</guid>
+    <pubDate>Wed, 11 Nov 2026 15:52:25 +0000</pubDate>
+    <description><![CDATA[<p><a href="https://gallery.clientdomain.com/sample-landscape.html"><img src="https://gallery.clientdomain.com/images/sample-landscape.jpeg" alt="Sample Landscape" /></a></p><p>Automated product and gallery visual showcase.</p>]]></description>
+    <enclosure url="https://gallery.clientdomain.com/images/sample-landscape.jpeg" length="375585" type="image/jpeg" />
+  </item>
 </channel>
 </rss>
