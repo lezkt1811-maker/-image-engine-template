@@ -136,11 +136,10 @@ const UPLOAD_HTML = `<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
 <title>Upload a picture</title>
 <style>
-  :root { --cyan:#22D3EE; --blue:#2563FF; --magenta:#FF2ED1; --violet:#A855F7; --bg:#070B14; --fg:#E9EFFF;
-          --muted:#9DB0DE; --card:#0A1124; --line:rgba(34,211,238,.38); }
+  :root { --cyan:#22D3EE; --blue:#2563FF; --magenta:#FF2ED1; --violet:#A855F7; --bg:#000000; --fg:#E9EFFF;
+          --muted:#9DB0DE; --card:#0A0A0A; --line:rgba(34,211,238,.38); }
   body { font-family: Inter, -apple-system, "Segoe UI", system-ui, sans-serif; margin: 0; padding: 20px; color: var(--fg);
-         background: radial-gradient(900px 500px at 15% -5%, rgba(37,99,255,.22), transparent 70%),
-                     radial-gradient(800px 500px at 100% 0%, rgba(168,85,247,.20), transparent 70%), var(--bg); min-height: 100vh; }
+         background: #000; min-height: 100vh; }
   .card { max-width: 420px; margin: 0 auto; background: var(--card); border: 1px solid var(--line); padding: 22px;
           border-radius: 12px; box-shadow: 0 0 34px rgba(37,99,255,.45), 0 0 70px rgba(168,85,247,.2); }
   h2 { font: 700 1.2rem Orbitron, "Eurostile", system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 .4rem;
@@ -149,7 +148,7 @@ const UPLOAD_HTML = `<!DOCTYPE html>
   label { display: block; font: 600 .72rem Orbitron, system-ui, sans-serif; letter-spacing: .22em; text-transform: uppercase;
           color: var(--cyan); margin-top: 16px; }
   input, button { width: 100%; box-sizing: border-box; font-size: 16px; padding: 12px; margin-top: 8px;
-                  border: 1px solid var(--line); border-radius: 10px; background: #050914; color: var(--fg); }
+                  border: 1px solid var(--line); border-radius: 10px; background: #050505; color: var(--fg); }
   input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 2px rgba(34,211,238,.25), 0 0 18px rgba(37,99,255,.5); }
   button { margin-top: 22px; border: 1px solid var(--cyan); font-weight: 600; color: #fff; cursor: pointer;
            background: linear-gradient(180deg,#3B79FF,#2563FF); box-shadow: 0 0 18px rgba(37,99,255,.65), inset 0 0 12px rgba(34,211,238,.25); }

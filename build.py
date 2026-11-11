@@ -216,12 +216,11 @@ def build_index(items, config):
 <meta property="og:type" content="website">
 <meta property="og:url" content="{html.escape(config['base_url'])}/">
 <style>
-  :root {{ --cyan:#22D3EE; --blue:#2563FF; --violet:#A855F7; --magenta:#FF2ED1; --bg:#070B14;
-          --fg:#E9EFFF; --muted:#9DB0DE; --card:#0A1124; --line:rgba(34,211,238,.38); }}
+  :root {{ --cyan:#22D3EE; --blue:#2563FF; --violet:#A855F7; --magenta:#FF2ED1; --bg:#000000;
+          --fg:#E9EFFF; --muted:#9DB0DE; --card:#0A0A0A; --line:rgba(34,211,238,.38); }}
   * {{ box-sizing: border-box; }}
   body {{ margin:0; min-height:100vh; color:var(--fg); font:17px/1.6 Inter,"Segoe UI",system-ui,-apple-system,sans-serif;
-         background: radial-gradient(900px 500px at 15% -5%, rgba(37,99,255,.22), transparent 70%),
-                     radial-gradient(800px 500px at 100% 0%, rgba(168,85,247,.20), transparent 70%), var(--bg); }}
+         background: #000; }}
   header {{ text-align:center; padding:1.6rem 1rem .6rem; }}
   header h1 {{ margin:0; font:700 clamp(1.4rem,4vw,2rem)/1.2 Orbitron,"Eurostile","Segoe UI",system-ui,sans-serif;
               letter-spacing:.08em; text-transform:uppercase; color:#fff;
