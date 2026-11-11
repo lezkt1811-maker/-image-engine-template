@@ -16,5 +16,5 @@ Thumbs.db
 *.swp
 *~
 
-# Note: output/ is intentionally NOT ignored. The build workflow commits it
+# Note: docs/ is intentionally NOT ignored. The build workflow commits it
 # so Cloudflare Pages can deploy the generated site.

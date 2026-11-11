@@ -27,7 +27,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(ROOT, "config.json")
 TEMPLATE_PATH = os.path.join(ROOT, "templates", "image-page.html")
 IMAGES_DIR = os.path.join(ROOT, "images")
-OUTPUT_DIR = os.path.join(ROOT, "output")
+OUTPUT_DIR = os.path.join(ROOT, "docs")  # GitHub Pages serves docs/ from main
 OUTPUT_IMAGES_DIR = os.path.join(OUTPUT_DIR, "images")
 
 # Optional: when set (e.g. https://pics.example.com, an R2 public bucket domain),
