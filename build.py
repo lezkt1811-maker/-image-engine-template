@@ -356,7 +356,7 @@ def main():
     write_text(os.path.join(OUTPUT_DIR, "sitemap.xml"), build_sitemap(items, config))
 
     log("Generated: index.html, rss.xml, sitemap.xml")
-    log(f"Done. {len(items)} page(s) written to output/.")
+    log(f"Done. {len(items)} page(s) written to docs/.")
     return 0
 
 
