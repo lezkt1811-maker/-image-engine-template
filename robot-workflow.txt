@@ -1,0 +1,76 @@
+name: Build gallery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "config.json"
+      - "images/**"
+      - "build.py"
+      - "templates/**"
+      - "scripts/**"
+      - ".github/workflows/build.yml"
+  repository_dispatch:
+    types: [image-uploaded]     # sent by the upload Worker after each R2 upload
+  schedule:
+    - cron: "17 */6 * * *"      # catches uploads whose dispatch failed
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-gallery
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Sync new pictures from R2
+        env:
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: bash scripts/sync_r2.sh
+
+      - name: Robot writes titles and descriptions (only if GEMINI_API_KEY is set)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -n "$GEMINI_API_KEY" ]; then
+            pip install --quiet pillow
+            python scripts/describe.py
+          else
+            echo "No GEMINI_API_KEY secret: skipping AI descriptions."
+          fi
+
+      - name: Build site
+        env:
+          R2_PUBLIC_URL: ${{ vars.R2_PUBLIC_URL }}
+        run: python build.py
+
+      - name: Commit generated site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A docs
+          # Keep the robot's drafts (images/*.ai.txt) so they are written only once.
+          git add -- 'images/*.ai.txt' 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No changes in docs/."
+          else
+            git commit -m "Rebuild docs/ [skip ci]"
+            git pull --rebase --autostash || true
+            git push
+          fi

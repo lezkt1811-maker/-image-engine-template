@@ -1,10 +1,12 @@
 {
-  "site_title": "Client Visual Archive",
-  "base_url": "https://gallery.clientdomain.com",
-  "author_name": "Client Business Name",
-  "pinterest_handle": "client_brand",
-  "site_description": "Automated product and gallery visual showcase.",
+  "site_title": "My Gallery",
+  "base_url": "",
+  "author_name": "Your Name or Business",
+  "pinterest_handle": "",
+  "site_description": "Photos of my work.",
   "shop_url": "",
   "shop_button_text": "Shop this",
-  "ai_context": ""
+  "ai_context": "",
+  "pinterest_verify": "",
+  "google_verify": ""
 }

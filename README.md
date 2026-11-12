@@ -19,7 +19,8 @@ This repository is meant to be used as a **GitHub Template repository**. Each cl
 1. Click **Use this template → Create a new repository**.
 2. Edit `config.json`:
    - `site_title`, `site_description`, `author_name`, `pinterest_handle`
-   - `base_url`: the final site address, with `https://` and no trailing slash.
+   - `base_url`: the final site address, with `https://` and no trailing slash. Leave it empty to use the repository's free GitHub Pages address automatically (`https://username.github.io/repo-name`).
+   - `pinterest_verify` / `google_verify`: the codes Pinterest and Google Search Console give you when you claim the site with the HTML-tag method. They are added to the gallery page.
    - Optional: `shop_url` (a default Buy link for every picture, e.g. the client's shop), `shop_button_text` (default "Shop this"), `ai_context` (a sentence telling the AI writer what the business sells; defaults to `site_description`), `ai_model`.
 3. In the repository, go to **Settings → Pages**, set the source to the `main` branch and the folder `/docs`, or connect it to Cloudflare Pages with the build output directory set to `docs`.
 4. Add pictures to `images/` and commit. The workflow rebuilds `docs/` automatically.

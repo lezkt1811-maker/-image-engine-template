@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image SEO Engine: Start Here</title>
+<style>
+  :root { --cyan:#22D3EE; --blue:#2563FF; --violet:#A855F7; --magenta:#FF2ED1; --fg:#E9EFFF; --muted:#9DB0DE; --line:rgba(34,211,238,.35); }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#000; color:var(--fg); font:17px/1.65 "Segoe UI",system-ui,-apple-system,sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 1.5rem 1.1rem 4rem; }
+  h1 { font-size: clamp(1.6rem,5vw,2.3rem); line-height:1.2; margin:.4rem 0 .3rem;
+       background:linear-gradient(90deg,var(--cyan),var(--blue) 40%,var(--violet) 75%,var(--magenta));
+       -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .lead { color: var(--muted); font-size: 1.1rem; margin-top: 0; }
+  h2 { margin: 2.2rem 0 .6rem; font-size: 1.3rem; color: #fff; display:flex; gap:.6rem; align-items:baseline; }
+  h2 .n { flex:none; display:inline-grid; place-items:center; width:2rem; height:2rem; border-radius:50%;
+          background:var(--blue); color:#fff; font-size:1rem; box-shadow:0 0 14px rgba(37,99,255,.7); }
+  .box { border:1px solid var(--line); border-radius:12px; padding:1rem 1.1rem; background:#07090f; margin:1rem 0; }
+  .tip { border-color: rgba(168,85,247,.5); }
+  .warn { border-color: rgba(255,46,209,.5); }
+  code { background:#0f1626; border:1px solid #1d2a44; border-radius:6px; padding:.08rem .38rem; font-size:.92em; color:#bfe9ff; }
+  pre { background:#0f1626; border:1px solid #1d2a44; border-radius:10px; padding:.9rem; overflow-x:auto; font-size:.88rem; line-height:1.5; }
+  ol li, ul li { margin:.35rem 0; }
+  b { color:#fff; }
+  a { color: var(--cyan); }
+  table { border-collapse: collapse; width:100%; margin:.6rem 0; font-size:.95rem; }
+  td, th { border:1px solid #1d2a44; padding:.45rem .6rem; text-align:left; vertical-align:top; }
+  th { background:#0b1120; }
+  .muted { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Image SEO Engine</h1>
+<p class="lead">Upload a picture. It writes the SEO and publishes it for you.</p>
+
+<div class="box">
+  <b>What you get:</b> every picture gets its own web page with a title, a description, the hidden tags Google reads, and an optional <b>Buy</b> button that goes to your shop. It also makes a feed that Pinterest can turn into pins automatically. Hosting is free on GitHub.
+</div>
+
+<div class="box warn">
+  <b>Before you start:</b> setup takes about 20 minutes, once, and you need a <b>computer</b> for steps 1 to 6. After that, you can add pictures from your phone.
+</div>
+
+<h2><span class="n">1</span>Make a free GitHub account</h2>
+<p>Go to <a href="https://github.com/signup">github.com/signup</a> and sign up. Your username becomes part of your website address, so pick something simple.</p>
+
+<h2><span class="n">2</span>Make a new repository (your site's folder)</h2>
+<ol>
+  <li>On GitHub, tap the <b>+</b> at the top right and choose <b>New repository</b>.</li>
+  <li>Name it something like <code>my-gallery</code>.</li>
+  <li>Choose <b>Public</b>. Free websites need a public repository.</li>
+  <li>Check <b>Add a README file</b>, then click <b>Create repository</b>.</li>
+</ol>
+
+<h2><span class="n">3</span>Upload the files from this kit</h2>
+<ol>
+  <li>Unzip the kit on your computer.</li>
+  <li>In your new repository, click <b>Add file</b>, then <b>Upload files</b>.</li>
+  <li>Open the unzipped folder, select <b>everything inside it</b> (all files and folders), and drag it into the upload box.</li>
+  <li>Click <b>Commit changes</b>.</li>
+</ol>
+
+<h2><span class="n">4</span>Add the robot (one file)</h2>
+<p>Your computer may hide the <code>.github</code> folder, so it might not have uploaded. Check: if you see a <code>.github</code> folder in your repository, skip this step. If not:</p>
+<ol>
+  <li>Click <b>Add file</b>, then <b>Create new file</b>.</li>
+  <li>For the name, type exactly: <code>.github/workflows/build.yml</code></li>
+  <li>Open <code>robot-workflow.txt</code> from the kit, copy all of it, and paste it into the big box.</li>
+  <li>Click <b>Commit changes</b>.</li>
+</ol>
+
+<h2><span class="n">5</span>Put in your info</h2>
+<p>In your repository, click <code>config.json</code>, then the <b>pencil</b> icon to edit. Change the words between the quotes:</p>
+<table>
+  <tr><th>Setting</th><th>What to put</th></tr>
+  <tr><td><code>site_title</code></td><td>Your gallery's name, e.g. <code>"Rosa's Pottery"</code></td></tr>
+  <tr><td><code>author_name</code></td><td>Your name or business name</td></tr>
+  <tr><td><code>site_description</code></td><td>One sentence about what you make or sell</td></tr>
+  <tr><td><code>shop_url</code></td><td>Where the Buy button goes for every picture, e.g. your shop or website. Leave <code>""</code> for no button.</td></tr>
+  <tr><td><code>shop_button_text</code></td><td>The button's words, e.g. <code>"Shop now"</code></td></tr>
+  <tr><td><code>base_url</code></td><td>Leave it <code>""</code>. It fills in your free address by itself. Only change it if you connect your own domain (step 10).</td></tr>
+</table>
+<p>Keep the quotes and commas exactly as they are. Click <b>Commit changes</b>.</p>
+
+<h2><span class="n">6</span>Turn on your website</h2>
+<ol>
+  <li>In your repository, click <b>Settings</b>, then <b>Pages</b> on the left.</li>
+  <li>Under <b>Branch</b>, choose <code>main</code>, then choose the folder <code>/docs</code>, and click <b>Save</b>.</li>
+  <li>Your site's address is <code>https://YOUR-USERNAME.github.io/my-gallery/</code> (use your username and repository name). It can take a few minutes to appear the first time.</li>
+</ol>
+
+<h2><span class="n">7</span>Add pictures (works on your phone)</h2>
+<ol>
+  <li>Open the <code>images</code> folder in your repository.</li>
+  <li>Click <b>Add file</b>, then <b>Upload files</b>, and pick your pictures (JPG, PNG or WEBP).</li>
+  <li>Click <b>Commit changes</b>. In about 2 minutes, each picture has its own page on your site.</li>
+</ol>
+<div class="box tip">
+  <b>Tip:</b> name your pictures with words, like <code>blue-ceramic-vase.jpg</code>, not <code>IMG_4021.jpg</code>. The name becomes the page title and web address. Or turn on the AI writer (step 9) and it writes them for you.
+</div>
+
+<h3>Give one picture its own Buy link, price and description (optional)</h3>
+<p>Upload a text file with the <b>same name</b> as the picture, ending in <code>.txt</code>. For <code>blue-ceramic-vase.jpg</code>, make <code>blue-ceramic-vase.txt</code>:</p>
+<pre>Shop: https://your-shop.com/blue-vase
+Price: $24
+Button: Buy this vase
+
+A glossy blue stoneware vase, handmade in small batches.</pre>
+<p class="muted">Every line is optional. A link must start with https://. To make one on GitHub: in the images folder, click Add file, then Create new file, and name it.</p>
+
+<h2><span class="n">8</span>Check it worked</h2>
+<p>Click the <b>Actions</b> tab in your repository. A green check means your site was updated. A red X means something went wrong. Click it to see the message (usually a typo in <code>config.json</code>, like a missing quote or comma).</p>
+
+<h2><span class="n">9</span>Turn on the free AI writer (optional, recommended)</h2>
+<p>This makes a free AI look at each new picture and write its title and description.</p>
+<ol>
+  <li>Go to <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a>, sign in with Google, and click <b>Create API key</b>. Don't turn on billing. The free plan is enough.</li>
+  <li>Copy the key.</li>
+  <li>In your repository: <b>Settings</b>, then <b>Secrets and variables</b>, then <b>Actions</b>, then <b>New repository secret</b>.</li>
+  <li>Name: <code>GEMINI_API_KEY</code>. Secret: paste your key. Click <b>Add secret</b>.</li>
+</ol>
+<p class="muted">The robot's drafts are saved as <code>name.ai.txt</code> in the images folder. To change its words, edit that file, or write your own <code>name.txt</code>, which always wins. Note: pictures are sent to Google to be described, and on the free plan Google may use them to improve its products.</p>
+
+<h2><span class="n">10</span>Get found on Google and Pinterest</h2>
+<p><b>Google:</b> sign in to <a href="https://search.google.com/search-console">Google Search Console</a>, add your site address, and choose the <b>HTML tag</b> way to verify. Copy only the code inside <code>content="..."</code> into <code>google_verify</code> in <code>config.json</code>, wait 2 minutes, and click Verify. Then go to <b>Sitemaps</b> and submit <code>sitemap.xml</code>.</p>
+<p><b>Pinterest (automatic pins):</b> Pinterest only auto-pins from a website you have <b>claimed</b>, and claiming works best with your own domain name (like <code>yourshop.com</code>, usually about $10 to $15 a year).</p>
+<ol>
+  <li>Connect your domain: in <b>Settings → Pages</b>, enter it under <b>Custom domain</b> and follow GitHub's instructions. Then set <code>base_url</code> in <code>config.json</code> to it, e.g. <code>"https://gallery.yourshop.com"</code>.</li>
+  <li>Make a free Pinterest <b>business</b> account. In its settings, claim your website with the <b>HTML tag</b> method, and copy the code into <code>pinterest_verify</code> in <code>config.json</code>.</li>
+  <li>In Pinterest settings, under <b>Auto-publish</b>, paste <code>https://your-site-address/rss.xml</code>, pick a board, and save. New pictures become pins within about a day.</li>
+</ol>
+<p class="muted">Without a claimed website, everything else still works. You can pin your pages to Pinterest by hand.</p>
+
+<h2>Questions</h2>
+<ul>
+  <li><b>Does it cost anything?</b> No. GitHub hosting and the AI writer are free at normal sizes. Only a custom domain costs money, and it's optional.</li>
+  <li><b>How do I remove a picture?</b> Delete it (and its .txt files) from the images folder. Its page disappears on the next update.</li>
+  <li><b>Can I change the colors?</b> Yes. The page design is in <code>templates/image-page.html</code>.</li>
+  <li><b>Phone upload page:</b> the <code>worker</code> folder has an advanced add-on for uploading without GitHub. It's optional and needs a free Cloudflare account. See <code>worker/README.md</code>.</li>
+</ul>
+</main>
+</body>
+</html>

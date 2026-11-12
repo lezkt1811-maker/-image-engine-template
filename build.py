@@ -63,6 +63,13 @@ def load_config():
         sys.exit(f"ERROR: config.json not found at {CONFIG_PATH}")
     with open(CONFIG_PATH, encoding="utf-8") as f:
         config = json.load(f)
+    if not str(config.get("base_url", "")).strip():
+        # Left blank: use the free GitHub Pages address of this repository.
+        repo = os.environ.get("GITHUB_REPOSITORY", "")
+        if "/" in repo:
+            owner, name = repo.split("/", 1)
+            host = f"{owner.lower()}.github.io"
+            config["base_url"] = f"https://{host}" if name.lower() == host else f"https://{host}/{name}"
     missing = [k for k in REQUIRED_CONFIG if not str(config.get(k, "")).strip()]
     if missing:
         sys.exit(f"ERROR: config.json is missing values for: {', '.join(missing)}")
@@ -264,6 +271,11 @@ def build_index(items, config):
     grid = "\n".join(cards) or "    <p>No images published yet.</p>"
     title = html.escape(config["site_title"])
     desc = html.escape(config["site_description"], quote=True)
+    verify = ""
+    for key, meta in (("pinterest_verify", "p:domain_verify"), ("google_verify", "google-site-verification")):
+        code = str(config.get(key, "")).strip()
+        if code:
+            verify += f'<meta name="{meta}" content="{html.escape(code, quote=True)}">\n'
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -271,7 +283,7 @@ def build_index(items, config):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title}</title>
 <meta name="description" content="{desc}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+{verify}<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="canonical" href="{html.escape(config['base_url'])}/">
