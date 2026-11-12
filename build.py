@@ -36,10 +36,11 @@ EXTERNAL_IMAGE_URL = os.environ.get("R2_PUBLIC_URL", "").strip().rstrip("/")
 
 
 def image_src(filename):
-    """Path used in the gallery grid: root-relative locally, absolute when external."""
+    """Path used on pages: relative locally (works at any address, including
+    username.github.io/repo-name/), absolute when images live on R2."""
     if EXTERNAL_IMAGE_URL:
         return f"{EXTERNAL_IMAGE_URL}/{quote(filename)}"
-    return f"/images/{quote(filename)}"
+    return f"images/{quote(filename)}"
 
 
 def image_abs(config, filename):
@@ -104,6 +105,12 @@ def find_images():
         if ext not in EXTENSIONS:
             continue
         base_slug = slugify(stem)
+        if not re.search(r"[a-z]{3}", base_slug):
+            # Camera names like 1000126999 or IMG_1234: use the note's title for a
+            # readable web address instead (blue-vase.html beats 1000126999.html).
+            titled = slugify(read_notes(path).get("title", ""))
+            if titled != "image":
+                base_slug = titled
         slug = base_slug
         counter = 1
         # Keep slugs unique and away from generated file names (index.html, rss.xml...).
@@ -247,8 +254,8 @@ def build_index(items, config):
             '    <a class="card" href="{href}">'
             '<img src="{src}" alt="{alt}" loading="lazy">'
             '<span>{title}</span></a>'.format(
-                # Root-relative paths: output/ is the web root on Cloudflare Pages.
-                href="/" + quote(item["slug"]) + ".html",
+                # Relative paths, so the site works at any address.
+                href=quote(item["slug"]) + ".html",
                 src=image_src(item["file"]),
                 alt=html.escape(item["alt"], quote=True),
                 title=html.escape(item["title"]),
@@ -413,6 +420,7 @@ def main():
             "SHOP_BLOCK": shop_block,
             "AUTHOR": html.escape(config["author_name"], quote=True),
             "IMAGE_URL": html.escape(image_url, quote=True),
+            "IMAGE_SRC": html.escape(image_src(filename), quote=True),
             "PAGE_URL": html.escape(page_url, quote=True),
             "BASE_URL": html.escape(base, quote=True),
         }
