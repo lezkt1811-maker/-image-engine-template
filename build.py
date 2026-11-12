@@ -36,10 +36,11 @@ EXTERNAL_IMAGE_URL = os.environ.get("R2_PUBLIC_URL", "").strip().rstrip("/")
 
 
 def image_src(filename):
-    """Path used in the gallery grid: root-relative locally, absolute when external."""
+    """Path used on pages: relative locally (works at any address, including
+    username.github.io/repo-name/), absolute when images live on R2."""
     if EXTERNAL_IMAGE_URL:
         return f"{EXTERNAL_IMAGE_URL}/{quote(filename)}"
-    return f"/images/{quote(filename)}"
+    return f"images/{quote(filename)}"
 
 
 def image_abs(config, filename):
@@ -104,6 +105,12 @@ def find_images():
         if ext not in EXTENSIONS:
             continue
         base_slug = slugify(stem)
+        if not re.search(r"[a-z]{3}", base_slug):
+            # Camera names like 1000126999 or IMG_1234: use the note's title for a
+            # readable web address instead (blue-vase.html beats 1000126999.html).
+            titled = slugify(read_notes(path).get("title", ""))
+            if titled != "image":
+                base_slug = titled
         slug = base_slug
         counter = 1
         # Keep slugs unique and away from generated file names (index.html, rss.xml...).
@@ -127,6 +134,63 @@ def clean_output():
         else:
             os.remove(full)
     os.makedirs(OUTPUT_IMAGES_DIR, exist_ok=True)
+
+
+NOTE_KEYS = {"title", "shop", "price", "button"}
+
+
+def parse_note(text):
+    """Read a picture's note file.
+
+    Optional "Key: value" lines at the top (Title, Shop, Price, Button), then the
+    description. Returns a dict with any of: title, shop, price, button, description.
+    """
+    info = {}
+    lines = text.replace("\r\n", "\n").split("\n")
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        m = re.match(r"^([A-Za-z]+)\s*:\s*(.*)$", line)
+        if not line or not m or m.group(1).lower() not in NOTE_KEYS:
+            break
+        value = m.group(2).strip()
+        if value:
+            info[m.group(1).lower()] = value
+        i += 1
+    desc = " ".join(" ".join(lines[i:]).split())
+    if desc:
+        info["description"] = desc
+    return info
+
+
+def read_notes(src):
+    """Merge the robot's draft (name.ai.txt) with the owner's note (name.txt).
+
+    The owner's note always wins; the AI only fills in what is missing.
+    """
+    stem = os.path.splitext(src)[0]
+    merged = {}
+    for path in (stem + ".ai.txt", stem + ".txt"):
+        if os.path.isfile(path):
+            with open(path, encoding="utf-8") as f:
+                merged.update(parse_note(f.read()))
+    return merged
+
+
+def safe_shop_url(url):
+    """Only allow real web links for Buy buttons."""
+    url = (url or "").strip()
+    return url if re.match(r"^https?://[^\s\"'<>]+$", url) else ""
+
+
+def first_sentence(text, limit=125):
+    m = re.match(r"(.+?[.!?])(\s|$)", text)
+    s = m.group(1) if m else text
+    return s if len(s) <= limit else s[:limit].rsplit(" ", 1)[0]
+
+
+def shorten(text, limit=160):
+    return text if len(text) <= limit else text[:limit - 1].rsplit(" ", 1)[0] + "…"
 
 
 def file_timestamp(path):
@@ -157,7 +221,7 @@ def build_json_ld(item, config, page_url, image_url):
         "@context": "https://schema.org",
         "@type": "ImageObject",
         "name": item["title"],
-        "description": config["site_description"],
+        "description": item["description"],
         "contentUrl": image_url,
         "url": page_url,
         "license": f"{config['base_url']}/license",
@@ -190,10 +254,10 @@ def build_index(items, config):
             '    <a class="card" href="{href}">'
             '<img src="{src}" alt="{alt}" loading="lazy">'
             '<span>{title}</span></a>'.format(
-                # Root-relative paths: output/ is the web root on Cloudflare Pages.
-                href="/" + quote(item["slug"]) + ".html",
+                # Relative paths, so the site works at any address.
+                href=quote(item["slug"]) + ".html",
                 src=image_src(item["file"]),
-                alt=html.escape(item["title"], quote=True),
+                alt=html.escape(item["alt"], quote=True),
                 title=html.escape(item["title"]),
             )
         )
@@ -273,8 +337,8 @@ def build_rss(items, config):
         image_url = image_abs(config, item["file"])
         preview = (
             f'<p><a href="{xml_escape(page_url)}"><img src="{xml_escape(image_url)}" '
-            f'alt="{xml_escape(item["title"])}" /></a></p>'
-            f"<p>{xml_escape(config['site_description'])}</p>"
+            f'alt="{xml_escape(item["alt"])}" /></a></p>'
+            f"<p>{xml_escape(item['description'])}</p>"
         )
         # A literal "]]>" would end the CDATA section early, so split it.
         preview = preview.replace("]]>", "]]]]><![CDATA[>")
@@ -329,7 +393,20 @@ def main():
         if not EXTERNAL_IMAGE_URL:          # external images are served from R2, not git
             shutil.copy2(src, os.path.join(OUTPUT_IMAGES_DIR, filename))
 
-        title = title_from_slug(slug)
+        note = read_notes(src)
+        title = note.get("title") or title_from_slug(slug)
+        description = note.get("description") or config["site_description"]
+        alt = first_sentence(note["description"]) if note.get("description") else title
+        shop = safe_shop_url(note.get("shop")) or safe_shop_url(config.get("shop_url"))
+        if note.get("shop") and not safe_shop_url(note.get("shop")):
+            log(f"  WARNING: Shop link for {os.path.basename(src)} must start with https:// (ignored)")
+        button = note.get("button") or config.get("shop_button_text") or "Shop this"
+        price = note.get("price", "")
+        shop_block = ""
+        if shop:
+            price_html = f'<span class="price">{html.escape(price)}</span>' if price else ""
+            shop_block = (f'<p class="shop">{price_html}<a class="buy" href="{html.escape(shop, quote=True)}" '
+                          f'rel="noopener">{html.escape(button)}</a></p>')
         date = file_timestamp(src)
         image_url = image_abs(config, filename)
         page_url = f"{base}/{quote(slug)}.html"
@@ -337,12 +414,18 @@ def main():
             "TITLE": html.escape(title, quote=True),
             "SITE_TITLE": html.escape(config["site_title"], quote=True),
             "SITE_DESCRIPTION": html.escape(config["site_description"], quote=True),
+            "DESCRIPTION": html.escape(description, quote=True),
+            "META_DESCRIPTION": html.escape(shorten(description), quote=True),
+            "ALT": html.escape(alt, quote=True),
+            "SHOP_BLOCK": shop_block,
             "AUTHOR": html.escape(config["author_name"], quote=True),
             "IMAGE_URL": html.escape(image_url, quote=True),
+            "IMAGE_SRC": html.escape(image_src(filename), quote=True),
             "PAGE_URL": html.escape(page_url, quote=True),
             "BASE_URL": html.escape(base, quote=True),
         }
         item = {"title": title, "slug": slug, "file": filename, "date": date,
+                "description": description, "alt": alt,
                 "size": os.path.getsize(src), "mime": EXTENSIONS[ext]}
         values["JSON_LD"] = build_json_ld(item, config, page_url, image_url)
         write_text(os.path.join(OUTPUT_DIR, slug + ".html"), render_page(template, values))

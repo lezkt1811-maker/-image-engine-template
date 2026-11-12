@@ -17,6 +17,12 @@ aws s3 sync "s3://${R2_BUCKET_NAME}" images/ \
   --exclude "*" \
   --include "*.jpg" --include "*.jpeg" --include "*.png" --include "*.webp"
 
+# Notes typed on the upload page (name.txt: shop link, price, description).
+# Separate sync with no --delete, so the robot's committed drafts (name.ai.txt) are never removed.
+aws s3 sync "s3://${R2_BUCKET_NAME}" images/ \
+  --endpoint-url "${R2_ENDPOINT_URL}" \
+  --exclude "*" --include "*.txt" --exclude "*.ai.txt"
+
 # Give each synced file its R2 upload time, so build.py dates pictures correctly
 # (the runner's download time would otherwise make every picture look new).
 aws s3api list-objects-v2 --bucket "${R2_BUCKET_NAME}" --endpoint-url "${R2_ENDPOINT_URL}" \

@@ -41,6 +41,22 @@ export async function tokenMatches(given, expected) {
   return diff === 0 && given.length > 0;
 }
 
+// Optional details typed on the upload form become "<name>.txt" next to the picture,
+// in the same format build.py reads (Shop/Price lines, a blank line, then the description).
+const oneLine = (v, max) => String(v || "").replace(/[\r\n]+/g, " ").trim().slice(0, max);
+
+export function buildNote(fields) {
+  const shop = oneLine(fields.shop, 500);
+  const price = oneLine(fields.price, 30);
+  const description = String(fields.description || "").trim().slice(0, 1000);
+  if (shop && !/^https?:\/\/[^\s"'<>]+$/.test(shop)) return { error: "The shop link must start with https://" };
+  const lines = [];
+  if (shop) lines.push(`Shop: ${shop}`);
+  if (price) lines.push(`Price: ${price}`);
+  if (description) lines.push("", description);
+  return { note: lines.length ? lines.join("\n").replace(/^\n/, "") + "\n" : "" };
+}
+
 async function uniqueKey(bucket, key) {
   if (!(await bucket.head(key))) return key;
   const dot = key.lastIndexOf(".");
@@ -106,9 +122,18 @@ export default {
       const ext = sniffType(bytes);
       if (!ext) return text("Only JPG, PNG or WEBP pictures are accepted.", 415);
 
+      const { note, error } = buildNote({
+        shop: form.get("shop"), price: form.get("price"), description: form.get("description"),
+      });
+      if (error) return text(error, 400);
+
       // 4. Clean name, never overwrite an existing picture, store in R2.
       const key = await uniqueKey(env.IMAGE_BUCKET, buildKey(file.name || "image", ext));
       await env.IMAGE_BUCKET.put(key, bytes, { httpMetadata: { contentType: ALLOWED[ext] } });
+      if (note) {
+        await env.IMAGE_BUCKET.put(key.replace(/\.[^.]+$/, ".txt"), note,
+          { httpMetadata: { contentType: "text/plain;charset=UTF-8" } });
+      }
 
       // 5. Ask GitHub to rebuild the site.
       const started = await dispatchBuild(env, key);
@@ -147,9 +172,10 @@ const UPLOAD_HTML = `<!DOCTYPE html>
        -webkit-text-fill-color: transparent; }
   label { display: block; font: 600 .72rem Orbitron, system-ui, sans-serif; letter-spacing: .22em; text-transform: uppercase;
           color: var(--cyan); margin-top: 16px; }
-  input, button { width: 100%; box-sizing: border-box; font-size: 16px; padding: 12px; margin-top: 8px;
+  input, textarea, button { width: 100%; box-sizing: border-box; font-size: 16px; padding: 12px; margin-top: 8px;
                   border: 1px solid var(--line); border-radius: 10px; background: #050505; color: var(--fg); }
-  input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 2px rgba(34,211,238,.25), 0 0 18px rgba(37,99,255,.5); }
+  textarea { min-height: 90px; font-family: inherit; resize: vertical; }
+  input:focus, textarea:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 2px rgba(34,211,238,.25), 0 0 18px rgba(37,99,255,.5); }
   button { margin-top: 22px; border: 1px solid var(--cyan); font-weight: 600; color: #fff; cursor: pointer;
            background: linear-gradient(180deg,#3B79FF,#2563FF); box-shadow: 0 0 18px rgba(37,99,255,.65), inset 0 0 12px rgba(34,211,238,.25); }
   button[disabled] { opacity: .5; }
@@ -166,6 +192,12 @@ const UPLOAD_HTML = `<!DOCTYPE html>
     <input id="code" type="password" autocomplete="off" required>
     <label for="picture">Picture</label>
     <input id="picture" type="file" accept="image/jpeg,image/png,image/webp" required>
+    <label for="shop">Shop link (optional)</label>
+    <input id="shop" type="url" inputmode="url" placeholder="https://… where people can buy it">
+    <label for="price">Price (optional)</label>
+    <input id="price" type="text" maxlength="30" placeholder="$24">
+    <label for="description">Description (optional)</label>
+    <textarea id="description" maxlength="1000" placeholder="Leave blank and the robot will write one"></textarea>
     <button id="send" type="submit">Upload</button>
   </form>
   <div id="msg" role="status"></div>
@@ -187,11 +219,18 @@ const UPLOAD_HTML = `<!DOCTYPE html>
     try { localStorage.setItem("uploadCode", code); } catch (err) {}
     var data = new FormData();
     data.append("image", file);
+    ["shop", "price", "description"].forEach(function (id) {
+      var v = document.getElementById(id).value.trim();
+      if (v) data.append(id, v);
+    });
     sendBtn.disabled = true;
     msg.textContent = "Uploading… please keep this page open.";
     fetch("/upload", { method: "POST", headers: { Authorization: "Bearer " + code }, body: data })
       .then(function (res) { return res.text().then(function (t) { return { ok: res.ok, text: t }; }); })
-      .then(function (r) { msg.textContent = r.text; if (r.ok) pictureBox.value = ""; })
+      .then(function (r) {
+        msg.textContent = r.text;
+        if (r.ok) { pictureBox.value = ""; ["shop", "price", "description"].forEach(function (id) { document.getElementById(id).value = ""; }); }
+      })
       .catch(function () { msg.textContent = "Could not reach the server. Check your connection and try again."; })
       .then(function () { sendBtn.disabled = false; });
   });

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import worker, { slugify, sniffType, buildKey } from "../src/index.js";
+import worker, { slugify, sniffType, buildKey, buildNote } from "../src/index.js";
 
 const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0, 16, 0x4a, 0x46, 0x49, 0x46, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]);
 const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13, 0x49, 0x48, 0x44, 0x52]);
@@ -17,9 +17,10 @@ function fakeBucket(existing = []) {
 
 // Builds an upload as the Workers runtime sees it: a browser always sends Content-Length,
 // which Node's Request hides, so the helper supplies it.
-async function uploadRequest({ token = "good-token", bytes = JPEG, name = "photo.jpg", type = "image/jpeg" } = {}) {
+async function uploadRequest({ token = "good-token", bytes = JPEG, name = "photo.jpg", type = "image/jpeg", fields = {} } = {}) {
   const form = new FormData();
   form.append("image", new File([bytes], name, { type }));
+  for (const [k, v] of Object.entries(fields)) form.append(k, v);
   const headers = {};
   if (token !== null) headers.Authorization = `Bearer ${token}`;
   const req = new Request("https://gallery.example.com/upload", { method: "POST", headers, body: form });
@@ -152,4 +153,33 @@ test("sends a repository_dispatch when configured", async () => {
   } finally {
     globalThis.fetch = realFetch;
   }
+});
+
+test("buildNote writes the same format build.py reads", async () => {
+  const { note } = buildNote({ shop: "https://shop.example.com/vase", price: "$24", description: "A blue vase." });
+  assert.equal(note, "Shop: https://shop.example.com/vase\nPrice: $24\n\nA blue vase.\n");
+  const { execFileSync } = await import("node:child_process");
+  const py = `import json,sys,build;print(json.dumps(build.parse_note(sys.stdin.read())))`;
+  const parsed = JSON.parse(execFileSync("python3", ["-c", py], {
+    input: note, cwd: new URL("../../", import.meta.url).pathname, encoding: "utf8",
+  }));
+  assert.deepEqual(parsed, { shop: "https://shop.example.com/vase", price: "$24", description: "A blue vase." });
+  assert.equal(buildNote({}).note, "");
+  assert.equal(buildNote({ description: "Only words." }).note, "Only words.\n");
+  assert.ok(buildNote({ shop: "javascript:alert(1)" }).error);
+});
+
+test("upload with a shop link stores a note next to the picture", async () => {
+  const bucket = fakeBucket();
+  const res = await worker.fetch(await uploadRequest({ name: "Blue Vase.jpg", fields: { shop: "https://shop.example.com/v", price: "$24" } }), env(bucket));
+  assert.equal(res.status, 200);
+  assert.ok("blue-vase.jpg" in bucket.stored);
+  assert.equal(bucket.stored["blue-vase.txt"].body, "Shop: https://shop.example.com/v\nPrice: $24\n");
+});
+
+test("upload with a bad shop link is refused and nothing is stored", async () => {
+  const bucket = fakeBucket();
+  const res = await worker.fetch(await uploadRequest({ fields: { shop: "not a link" } }), env(bucket));
+  assert.equal(res.status, 400);
+  assert.deepEqual(Object.keys(bucket.stored), []);
 });
