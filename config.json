@@ -3,5 +3,8 @@
   "base_url": "https://gallery.clientdomain.com",
   "author_name": "Client Business Name",
   "pinterest_handle": "client_brand",
-  "site_description": "Automated product and gallery visual showcase."
+  "site_description": "Automated product and gallery visual showcase.",
+  "shop_url": "",
+  "shop_button_text": "Shop this",
+  "ai_context": ""
 }

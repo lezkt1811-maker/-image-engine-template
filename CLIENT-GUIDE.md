@@ -45,6 +45,26 @@ You can do this from a computer or from a phone.
 - Keep each picture under about 5 MB. Most phone photos are close to that size. GitHub refuses files over 25 MB.
 - You can select several pictures at once. Each picture becomes its own page, and its file name becomes the page title, so give each one a clear name.
 
+### Add a Buy button and description (optional, but this is what makes sales)
+Next to your picture, upload a small text file with the **same name** ending in `.txt` (for `blue-ceramic-vase.jpg`, name it `blue-ceramic-vase.txt`). Put any of these lines at the top, then a blank line, then a sentence or two about the picture:
+
+```
+Shop: https://your-shop.com/blue-vase
+Price: $24
+Button: Buy this vase
+
+A glossy blue stoneware vase, thrown by hand in Kansas City.
+```
+
+- **Shop** puts a big **Buy** button on the picture's page that goes to that link. It must start with `https://`.
+- **Price** shows next to the button. **Button** changes the button's words. **Title** sets the page title yourself.
+- Every line is optional. If you leave out the description, the robot writes one (see below).
+
+If you use the **upload page** (`/upload`) instead, just fill in the Shop link, Price and Description boxes. They do the same thing.
+
+### The robot writer
+If your web helper turned it on, the site uses a free AI to look at each new picture and write a title and description for you. Its draft is saved as `name.ai.txt`. Your own `name.txt` always wins, so to change the robot's words, either edit the `.ai.txt` file or write your own `.txt`.
+
 ## 3. Wait for the update
 
 After you commit, the website rebuilds automatically. This usually takes **1 to 3 minutes**. You can check progress on the **Actions** tab of the project page. A green checkmark means it's done.
@@ -78,6 +98,7 @@ Pictures appear as pins after Pinterest reads the feed, which happens about once
 ## 6. Quick checklist
 
 - [ ] Picture uploaded to the `images` folder
+- [ ] Shop link added (a `.txt` file or the upload page's Shop box), so the page has a Buy button
 - [ ] Green checkmark on the Actions tab
 - [ ] Picture visible on the website
 - [ ] Pin appears on Pinterest within 24 hours

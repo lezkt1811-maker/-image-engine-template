@@ -1,1 +1,3 @@
 # build.py uses only the Python 3.9+ standard library. No packages to install.
+# Optional: scripts/describe.py (AI descriptions) also needs Pillow. The workflow installs it
+# automatically when a GEMINI_API_KEY secret is set.
